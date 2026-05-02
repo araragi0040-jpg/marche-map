@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>簡易CAD風マルシェマップ デモ v4</title>
+  <style>
+    :root{
+      --bg:#f7f3ea;--paper:#fffaf0;--paper2:#fffdf7;--ink:#2f2a24;--muted:#756b60;--line:#d9cbb5;
+      --accent:#d97706;--accent2:#fff0d6;--danger:#b91c1c;--shadow:0 14px 34px rgba(61,43,23,.13);
+      --green:#78c679;--orange:#f4a261;--blue:#6fa8dc;--purple:#a78bfa;--red:#f87171;--gray:#c9c3b8;--cyan:#67d4d8;--yellow:#f8d66d;
+    }
+    *{box-sizing:border-box} html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink);background:radial-gradient(circle at top left,rgba(255,196,87,.22),transparent 32%),linear-gradient(160deg,#fffaf0,var(--bg));}
+    button,input,select,textarea{font:inherit} button{border:0;border-radius:999px;padding:10px 14px;background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1px rgba(121,95,55,.18);cursor:pointer;transition:.15s ease} button:hover{transform:translateY(-1px);box-shadow:inset 0 0 0 1px rgba(121,95,55,.25),0 8px 18px rgba(61,43,23,.1)} button:active{transform:translateY(0)}
+    .primary{background:var(--accent);color:#fff;box-shadow:0 10px 20px rgba(217,119,6,.22)} .danger{background:#fff1f2;color:var(--danger)} .ghost{background:transparent}.mini{padding:7px 10px;font-size:12px}.active-btn{background:var(--ink);color:#fff}
+    .app-header{position:sticky;top:0;z-index:50;background:rgba(255,250,240,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(146,112,72,.18)}
+    .header-inner{max-width:1180px;margin:0 auto;padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center}.title h1{font-size:clamp(17px,4.3vw,27px);margin:0;letter-spacing:.04em}.title p{font-size:12px;color:var(--muted);margin:3px 0 0}.toolbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;align-items:center}.mode-toggle{display:flex;gap:4px;padding:4px;border-radius:999px;background:#f0e6d6}.mode-toggle button{box-shadow:none;background:transparent;color:var(--muted);padding:8px 12px}.mode-toggle button.active{background:#fff;color:var(--ink);box-shadow:0 6px 14px rgba(61,43,23,.1)}
+    main{max-width:1180px;margin:0 auto;padding:14px}.card{background:rgba(255,250,240,.9);border:1px solid rgba(146,112,72,.18);border-radius:26px;box-shadow:var(--shadow)}
+
+    .visitor-tabs{display:flex;gap:8px;overflow:auto;padding:10px;margin-bottom:12px}.visitor-tabs button{white-space:nowrap}.visitor-tabs button.active{background:var(--ink);color:#fff}.visitor-panel{display:none}.visitor-panel.active{display:block}.home-notice{padding:18px}.home-notice h2{font-size:20px;margin:0 0 10px}.notice-body{background:#fff;border:1px solid rgba(146,112,72,.16);border-radius:20px;padding:14px;line-height:1.8;color:var(--muted);font-size:14px}.survey-box{margin-top:14px;padding:14px;border-radius:20px;background:linear-gradient(180deg,#fff7e8,#fffdf8);border:1px solid rgba(217,119,6,.22)}.survey-box h3{font-size:15px;margin:0 0 6px}.survey-box p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.7}.category-select{display:flex;gap:8px;align-items:center;background:#fff;border-radius:999px;padding:7px 10px;box-shadow:inset 0 0 0 1px rgba(121,95,55,.16)}.category-select label{font-size:12px;color:var(--muted);font-weight:800}.category-select select{border:0;background:transparent;outline:none;min-width:150px;color:var(--ink);font-weight:700}
+    .notice{padding:13px 15px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start}.notice b{white-space:nowrap}.notice span{font-size:13px;color:var(--muted);line-height:1.6}.view-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px;align-items:start}.edit-grid{display:block}.section-head{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:13px 15px 8px;flex-wrap:wrap}.section-head h2{font-size:16px;margin:0}.hint{font-size:12px;color:var(--muted);line-height:1.5}.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.pill{display:inline-flex;gap:6px;align-items:center;padding:7px 10px;border-radius:999px;background:#fff;box-shadow:inset 0 0 0 1px rgba(121,95,55,.16);font-size:12px;color:var(--muted)}
+    .map-card{overflow:hidden}.map-shell{padding:8px 12px 14px}.zoom-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:0 3px 8px}.zoom-row .left,.zoom-row .right{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.map-viewport{width:100%;height:72vh;min-height:560px;overflow:scroll;background:#fffef8;border:1px solid rgba(146,112,72,.18);border-radius:22px;position:relative;-webkit-overflow-scrolling:touch;cursor:grab;overscroll-behavior:contain}.map-viewport.dragging{cursor:grabbing}.map-canvas{width:max-content;height:max-content;padding:24px 24px 90px;transform-origin:top left}.map-frame{background:#fffdf7;border-radius:20px;box-shadow:0 8px 20px rgba(61,43,23,.08);overflow:hidden}
+    svg{display:block;touch-action:none;user-select:none}.venue-bg{fill:#fffdf7;stroke:#b9a98e;stroke-width:3}.grid-line{stroke:#efe5d6;stroke-width:1}.grid-line.major{stroke:#e3d2bb;stroke-width:1.5}.path{fill:rgba(220,210,195,.38);stroke:rgba(130,108,83,.2);stroke-width:1}.zone{fill:rgba(217,119,6,.06);stroke:rgba(217,119,6,.32);stroke-dasharray:8 8;stroke-width:2}.map-label{fill:#756b60;font-size:18px;font-weight:800;letter-spacing:.04em}.tiny-label{fill:#756b60;font-size:13px;font-weight:800}.booth-group{cursor:pointer}.booth-rect{stroke:rgba(47,42,36,.34);stroke-width:2;rx:12;ry:12;filter:drop-shadow(0 8px 10px rgba(66,43,18,.1))}.booth-group.selected .booth-rect{stroke:#111827;stroke-width:4;stroke-dasharray:8 5}.booth-group.move-ready .booth-rect{stroke:#d97706;stroke-width:5;stroke-dasharray:none}.booth-number{fill:#1f2937;font-weight:900;font-size:24px;pointer-events:none}.booth-name{fill:#1f2937;font-weight:800;font-size:15px;pointer-events:none}.booth-category{fill:rgba(31,41,55,.72);font-size:11px;font-weight:700;pointer-events:none}.resize-handle{fill:#111827;stroke:#fff;stroke-width:2;cursor:nwse-resize}.hidden{display:none!important}
+    .legend{display:flex;flex-wrap:wrap;gap:7px;padding:0 15px 13px}.legend-item{display:flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;background:#fff;font-size:12px;color:var(--muted);box-shadow:inset 0 0 0 1px rgba(121,95,55,.12)}.dot{width:12px;height:12px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(47,42,36,.12)}
+    .filters{display:flex;flex-wrap:wrap;gap:8px;padding:0 15px 13px}.filter-btn.active{background:var(--ink);color:#fff}.side-panel{padding:14px}.side-panel h3{margin:0 0 10px;font-size:16px}.booth-list{display:grid;gap:8px;max-height:70vh;overflow:auto;padding-right:3px}.list-item{width:100%;text-align:left;border-radius:18px;padding:10px;background:#fff;box-shadow:inset 0 0 0 1px rgba(121,95,55,.14)}.list-item strong{display:block;font-size:14px}.list-item span{display:block;margin-top:3px;color:var(--muted);font-size:12px;line-height:1.4}.list-item .tag{display:inline-flex;margin-top:7px;border-radius:999px;padding:4px 8px;color:#1f2937;font-size:11px;font-weight:800}
+    .bottom-sheet{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);width:min(560px,calc(100vw - 22px));z-index:100;background:#fffaf0;border:1px solid rgba(146,112,72,.28);border-radius:26px;box-shadow:0 22px 50px rgba(47,42,36,.22);padding:16px}.sheet-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.sheet-head h3{margin:0;font-size:18px}.sheet-body{margin-top:10px;display:grid;gap:8px;color:var(--muted);font-size:13px;line-height:1.55}.sheet-body b{color:var(--ink)}.close-x{font-size:20px;line-height:1;width:36px;height:36px;padding:0}.sheet-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .edit-tabs{display:flex;gap:8px;overflow:auto;padding:10px;margin-bottom:12px}.edit-tabs button{white-space:nowrap}.edit-tabs button.active{background:var(--ink);color:#fff}.tab-panel{display:none}.tab-panel.active{display:block}.edit-help{padding:12px 14px;margin-bottom:12px;background:#fffdf7;border-radius:22px;border:1px solid rgba(146,112,72,.16);color:var(--muted);font-size:13px;line-height:1.7}.selected-bar{display:none;margin:0 0 12px;padding:13px 14px;border:1px solid rgba(217,119,6,.25);border-radius:22px;background:linear-gradient(180deg,#fff7e8,#fffdf8);box-shadow:0 8px 18px rgba(217,119,6,.1)}.selected-bar.show{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.selected-bar strong{font-size:14px}.selected-bar span{color:var(--muted);font-size:12px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:14px}.field{display:grid;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:12px;color:var(--muted);font-weight:800}.field input,.field select,.field textarea{width:100%;border:1px solid rgba(121,95,55,.2);border-radius:16px;background:#fff;padding:11px 12px;color:var(--ink);outline:none}.field textarea{min-height:92px;resize:vertical}.form-actions{display:flex;gap:8px;flex-wrap:wrap;padding:0 14px 14px}.json-area{min-height:260px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}.toast{position:fixed;left:50%;top:86px;transform:translateX(-50%);z-index:120;background:#2f2a24;color:#fff;padding:10px 14px;border-radius:999px;box-shadow:0 14px 34px rgba(47,42,36,.24);font-size:13px;max-width:calc(100vw - 24px);text-align:center}.empty{padding:18px;color:var(--muted);text-align:center;background:#fff;border-radius:20px;border:1px dashed rgba(121,95,55,.25)}
+
+    .visitor-map-card{height:calc(100dvh - 158px);min-height:560px;display:flex;flex-direction:column;overflow:hidden}.visitor-map-card .section-head{flex:0 0 auto}.visitor-map-card .legend{flex:0 0 auto}.visitor-map-card .map-shell{flex:1;min-height:0;display:flex;flex-direction:column}.visitor-map-card .zoom-row{flex:0 0 auto}.visitor-map-card .map-viewport{flex:1;height:auto;min-height:0}.list-tools{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}.list-page-card{height:calc(100dvh - 158px);min-height:520px;display:flex;flex-direction:column;overflow:hidden}.list-page-card .booth-list{flex:1;min-height:0;max-height:none;overflow:auto}.admin-note{font-size:11px;color:var(--muted);padding:0 2px}
+    @media(max-width:900px){.header-inner{grid-template-columns:1fr}.toolbar{justify-content:flex-start}.view-grid{grid-template-columns:1fr}.side-panel{order:2}.map-viewport{height:68vh;min-height:520px}.form-grid{grid-template-columns:1fr}.notice{display:block}.notice b{display:block;margin-bottom:4px}}
+    @media(max-width:520px){main{padding:10px}.visitor-map-card{height:calc(100dvh - 138px);min-height:420px}.list-page-card{height:calc(100dvh - 138px);min-height:420px}.card{border-radius:22px}.section-head{padding:12px}.map-shell{padding:8px}.map-viewport{height:66vh;min-height:480px;border-radius:18px}.edit-tabs{padding:8px;margin-bottom:10px}.edit-tabs button{padding:9px 11px}.zoom-row{gap:6px}.zoom-row button{padding:8px 10px}.pill{font-size:11px}.title p{display:none}.bottom-sheet{bottom:8px;border-radius:22px}.sheet-body{max-height:42vh;overflow:auto}.selected-bar{position:sticky;top:76px;z-index:30}.booth-list{max-height:none}}
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="title">
+        <h1>めぐるマルシェマップ｜簡易CADデモ v4</h1>
+        <p>お知らせホーム・マップ固定表示・一覧ソート・編集権限対応版</p>
+      </div>
+      <div class="toolbar">
+        <div class="mode-toggle" aria-label="表示モード">
+          <button id="visitorModeBtn" class="active">来場者</button>
+          <button id="editorModeBtn" class="hidden">編集</button>
+        </div>
+        <button class="mini ghost" id="adminUnlockBtn">運営認証</button>
+        <button class="mini ghost hidden" id="saveBtn">保存</button>
+        <button class="mini ghost hidden" id="loadBtn">読込</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="visitorView">
+      <div class="visitor-tabs card" role="tablist" aria-label="来場者メニュー">
+        <button class="active" data-visitor-tab="noticeVisitorTab">運営からのお知らせ</button>
+        <button data-visitor-tab="mapVisitorTab">会場マップ</button>
+        <button data-visitor-tab="listVisitorTab">出店者一覧</button>
+      </div>
+
+      <div id="noticeVisitorTab" class="visitor-panel active">
+        <div class="card home-notice">
+          <h2>運営からのお知らせ</h2>
+          <div class="notice-body" id="noticeText">本日はご来場ありがとうございます。飲食エリアは入口から奥へ進んだ左側、アンケートは画面下のボタンから回答できます。</div>
+          <div class="survey-box">
+            <h3>来場アンケート</h3>
+            <p>イベントの感想や、次回ほしい出店ジャンルなどを教えてください。今後はここからGoogleフォームや独自アンケートへ遷移する想定です。</p>
+            <button class="primary" onclick="openSurvey()">アンケートに回答する</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="mapVisitorTab" class="visitor-panel">
+        <div class="map-card card visitor-map-card">
+          <div class="section-head">
+            <div>
+              <h2>会場マップ</h2>
+              <div class="hint">縦長レイアウトです。指でドラッグすると上下左右に視点移動できます。お店は短くタップすると詳細が開きます。</div>
+            </div>
+            <div id="visitorFilters" class="filters"></div>
+          </div>
+          <div id="visitorLegend" class="legend"></div>
+          <div class="map-shell">
+            <div class="zoom-row">
+              <div class="left">
+                <button class="mini" onclick="zoomOut()">− 縮小</button>
+                <button class="mini" onclick="zoomIn()">＋ 拡大</button>
+                <button class="mini" onclick="fitWidth()">幅に合わせる</button>
+                <button class="mini" onclick="fitAll()">全体表示</button>
+              </div>
+              <div class="right"><span class="pill">表示倍率 <b id="zoomLabel1">100%</b></span></div>
+            </div>
+            <div id="visitorViewport" class="map-viewport"><div id="visitorCanvas" class="map-canvas"><div class="map-frame" id="visitorMapMount"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="listVisitorTab" class="visitor-panel">
+        <aside class="side-panel card list-page-card">
+          <h3>出店者一覧</h3>
+          <div class="hint" style="margin-bottom:10px">一覧から詳細を開けます。ジャンル絞り込みと並び替えに対応しています。</div>
+          <div class="list-tools">
+            <div class="category-select"><label for="listSortSelect">並び替え</label><select id="listSortSelect"><option value="id">番号順</option><option value="category">ジャンル順</option><option value="name">店名順</option></select></div>
+          </div>
+          <div id="boothList" class="booth-list"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="editorView" class="hidden">
+      <div class="edit-tabs card" role="tablist">
+        <button class="active" data-tab="layoutTab">レイアウト編集</button>
+        <button data-tab="addTab">新店舗追加</button>
+        <button data-tab="infoTab">店舗情報編集</button>
+        <button data-tab="dataTab">データ管理</button>
+      </div>
+
+      <div id="layoutTab" class="tab-panel active">
+        <div class="edit-help">
+          <b>操作ルール：</b>お店を1回タップすると「選択」だけされます。すぐには移動しません。<br>
+          移動・サイズ変更したい場合は、選択後に <b>「配置を動かす」</b> を押してください。誤操作防止のため、編集開始を一段挟んでいます。
+        </div>
+        <div id="selectedBar" class="selected-bar">
+          <div><strong id="selectedTitle">未選択</strong><br><span id="selectedSub">お店をタップして選択してください。</span></div>
+          <div class="actions">
+            <button class="mini primary" id="enableMoveBtn">配置を動かす</button>
+            <button class="mini" onclick="switchTab('infoTab')">店舗情報を編集</button>
+            <button class="mini ghost" id="stopMoveBtn">移動解除</button>
+          </div>
+        </div>
+        <div class="map-card card">
+          <div class="section-head">
+            <div>
+              <h2>縦長会場レイアウト</h2>
+              <div class="hint">会場全体を縦長長方形で表示。編集はPC推奨ですが、スマホでも最低限操作できます。</div>
+            </div>
+            <div class="actions">
+              <button class="mini" id="snapBtn">グリッド吸着 ON</button>
+              <button class="mini" onclick="centerSelected()">選択位置へ移動</button>
+            </div>
+          </div>
+          <div id="editorLegend" class="legend"></div>
+          <div class="map-shell">
+            <div class="zoom-row">
+              <div class="left">
+                <button class="mini" onclick="zoomOut()">− 縮小</button>
+                <button class="mini" onclick="zoomIn()">＋ 拡大</button>
+                <button class="mini" onclick="fitWidth()">幅に合わせる</button>
+                <button class="mini" onclick="resetZoom()">100%</button>
+              </div>
+              <div class="right"><span class="pill">表示倍率 <b id="zoomLabel2">100%</b></span></div>
+            </div>
+            <div id="editorViewport" class="map-viewport"><div id="editorCanvas" class="map-canvas"><div class="map-frame" id="editorMapMount"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="addTab" class="tab-panel">
+        <div class="edit-help">新しいお店・受付・休憩スペースなどを追加するタブです。追加後はレイアウト編集タブで位置調整してください。</div>
+        <div class="card">
+          <div class="section-head"><h2>新店舗・設備を追加</h2><span class="hint">配置位置は仮で中央付近に入ります。</span></div>
+          <div class="form-grid" id="addForm"></div>
+          <div class="form-actions">
+            <button class="primary" id="addBoothBtn">追加する</button>
+            <button id="addSampleBtn">サンプル店舗を追加</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="infoTab" class="tab-panel">
+        <div class="edit-help">選択中のお店の情報を編集するタブです。レイアウト画面でお店を選んでから編集してください。</div>
+        <div class="card">
+          <div class="section-head"><h2>店舗情報編集</h2><span class="hint" id="infoSelectedHint">未選択</span></div>
+          <div id="noSelection" class="empty">まだ店舗が選択されていません。レイアウト編集タブで店舗をタップしてください。</div>
+          <div class="form-grid hidden" id="editForm"></div>
+          <div class="form-actions hidden" id="editActions">
+            <button class="primary" id="applyInfoBtn">情報を保存</button>
+            <button id="duplicateBtn">複製</button>
+            <button class="danger" id="deleteBtn">削除</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="dataTab" class="tab-panel">
+        <div class="edit-help">現時点ではブラウザ内保存とJSON入出力に対応しています。将来的にこのJSON部分をスプレッドシートや管理画面に置き換えられます。</div>
+        <div class="card">
+          <div class="section-head"><h2>JSONデータ</h2><span class="hint">コピーしてバックアップできます。</span></div>
+          <div class="form-grid">
+            <div class="field full"><label>会場名</label><input id="eventNameInput" /></div>
+            <div class="field full"><label>運営お知らせ</label><textarea id="noticeInput"></textarea></div>
+            <div class="field full"><label>店舗・会場データ JSON</label><textarea id="jsonBox" class="json-area"></textarea></div>
+          </div>
+          <div class="form-actions">
+            <button class="primary" id="exportBtn">現在データをJSONに出力</button>
+            <button id="importBtn">JSONから読込</button>
+            <button id="copyJsonBtn">コピー</button>
+            <button class="danger" id="resetBtn">初期データに戻す</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="detailSheet" class="bottom-sheet hidden" aria-live="polite"></div>
+  <div id="toast" class="toast hidden"></div>
+
+  <script>
+    const MAP_W = 700;
+    const MAP_H = 1200;
+    const BASE_PX_W = 700;
+    const BASE_PX_H = 1200;
+    const storageKey = 'marcheCadDemoV2Data';
+
+    const categories = {
+      '飲食': { color: '#78c679', label: '飲食' },
+      '物販': { color: '#f4a261', label: '物販' },
+      '体験': { color: '#6fa8dc', label: '体験' },
+      'ステージ': { color: '#a78bfa', label: 'ステージ' },
+      '受付・本部': { color: '#f87171', label: '受付・本部' },
+      '休憩': { color: '#c9c3b8', label: '休憩' },
+      '設備': { color: '#67d4d8', label: '設備' },
+      'その他': { color: '#f8d66d', label: 'その他' }
+    };
+
+    const initialData = {
+      eventName: 'めぐるマルシェ 2026',
+      notice: '本日はご来場ありがとうございます。飲食エリアは入口から奥へ進んだ左側、アンケートは画面下のボタンから回答できます。',
+      booths: [
+        { id: 1, name: '〇〇カレー', category: '飲食', x: 70, y: 115, w: 185, h: 95, description: 'スパイスカレーとチャイを販売します。', menu: 'スパイスカレー / チャイ / 焼き菓子', price: '500円〜1,200円', payment: '現金 / PayPay', instagram: '@curry_example' },
+        { id: 2, name: '季節の焼き菓子', category: '飲食', x: 280, y: 115, w: 185, h: 95, description: '米粉の焼き菓子とドリンクを販売します。', menu: 'マフィン / クッキー / コーヒー', price: '300円〜900円', payment: '現金 / PayPay', instagram: '@oyatsu_example' },
+        { id: 3, name: 'ハンドメイド雑貨', category: '物販', x: 70, y: 275, w: 170, h: 90, description: '布小物とアクセサリーの販売です。', menu: 'アクセサリー / 布小物 / ポストカード', price: '300円〜2,000円', payment: '現金', instagram: '@zakka_example' },
+        { id: 4, name: '灯火カード体験', category: '体験', x: 270, y: 275, w: 180, h: 90, description: '自分の内側の言葉を見つけるミニ体験ブースです。', menu: 'ミニセッション / カード体験', price: '無料〜1,000円', payment: '現金 / PayPay', instagram: '@tomoshibi_example' },
+        { id: 5, name: '受付・本部', category: '受付・本部', x: 95, y: 1010, w: 220, h: 95, description: '受付、落とし物、運営へのお問い合わせはこちら。', menu: '受付 / 案内 / 落とし物', price: '-', payment: '-', instagram: '' },
+        { id: 6, name: 'ミニライブ', category: 'ステージ', x: 385, y: 850, w: 210, h: 135, description: '時間ごとに小さなライブ・パフォーマンスを行います。', menu: '歌 / トーク / パフォーマンス', price: '観覧無料', payment: '-', instagram: '@live_example' },
+        { id: 7, name: '休憩スペース', category: '休憩', x: 75, y: 620, w: 210, h: 115, description: '購入したものを食べたり、少し休憩できるスペースです。', menu: '椅子 / テーブル', price: '-', payment: '-', instagram: '' },
+        { id: 8, name: 'トイレ', category: '設備', x: 510, y: 1030, w: 100, h: 75, description: '会場奥側の設備です。', menu: 'トイレ', price: '-', payment: '-', instagram: '' }
+      ]
+    };
+
+    let data = structuredClone(initialData);
+    let mode = 'visitor';
+    let activeFilter = 'すべて';
+    let selectedId = null;
+    let moveReady = false;
+    let snap = true;
+    let zoom = 1;
+    let dragState = null;
+    let currentTab = 'layoutTab';
+    let currentVisitorTab = 'noticeVisitorTab';
+    let visitorPan = null;
+    let listSort = 'id';
+    let editorAuthorized = false;
+    const ADMIN_KEY = 'marche2026';
+
+    const $ = (id) => document.getElementById(id);
+    const escapeHtml = (str='') => String(str).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+    const snapVal = v => snap ? Math.round(v / 10) * 10 : Math.round(v);
+    const getBooth = id => data.booths.find(b => b.id === id);
+    const nextId = () => Math.max(0, ...data.booths.map(b => Number(b.id)||0)) + 1;
+
+    function colorFor(cat){ return (categories[cat] || categories['その他']).color; }
+    function setToast(msg){ const t=$('toast'); t.textContent=msg; t.classList.remove('hidden'); clearTimeout(setToast.timer); setToast.timer=setTimeout(()=>t.classList.add('hidden'),1800); }
+
+    function buildForm(targetId, prefix, booth={}){
+      const cats = Object.keys(categories).map(c => `<option value="${c}" ${booth.category===c?'selected':''}>${c}</option>`).join('');
+      $(targetId).innerHTML = `
+        <div class="field"><label>番号</label><input id="${prefix}id" type="number" value="${booth.id ?? nextId()}"></div>
+        <div class="field"><label>カテゴリ</label><select id="${prefix}category">${cats}</select></div>
+        <div class="field full"><label>店名・表示名</label><input id="${prefix}name" value="${escapeHtml(booth.name ?? '')}" placeholder="例：〇〇カレー"></div>
+        <div class="field full"><label>説明</label><textarea id="${prefix}description" placeholder="お店の説明や紹介文">${escapeHtml(booth.description ?? '')}</textarea></div>
+        <div class="field full"><label>販売内容・メニュー</label><input id="${prefix}menu" value="${escapeHtml(booth.menu ?? '')}" placeholder="例：カレー / チャイ / 焼き菓子"></div>
+        <div class="field"><label>価格帯</label><input id="${prefix}price" value="${escapeHtml(booth.price ?? '')}" placeholder="例：500円〜1,200円"></div>
+        <div class="field"><label>支払い方法</label><input id="${prefix}payment" value="${escapeHtml(booth.payment ?? '')}" placeholder="例：現金 / PayPay"></div>
+        <div class="field full"><label>Instagram / URL</label><input id="${prefix}instagram" value="${escapeHtml(booth.instagram ?? '')}" placeholder="例：@example / https://..."></div>
+      `;
+    }
+
+    function readForm(prefix){
+      return {
+        id: Number($(`${prefix}id`).value || nextId()),
+        category: $(`${prefix}category`).value,
+        name: $(`${prefix}name`).value || '名称未設定',
+        description: $(`${prefix}description`).value || '',
+        menu: $(`${prefix}menu`).value || '',
+        price: $(`${prefix}price`).value || '',
+        payment: $(`${prefix}payment`).value || '',
+        instagram: $(`${prefix}instagram`).value || ''
+      };
+    }
+
+    function mapSvg(isEditor=false){
+      const filtered = data.booths.filter(b => activeFilter === 'すべて' || b.category === activeFilter);
+      const booths = filtered.map(b => {
+        const selected = b.id === selectedId;
+        const ready = selected && moveReady && isEditor;
+        const label = b.name.length > 9 ? b.name.slice(0,8) + '…' : b.name;
+        const cat = b.category.length > 6 ? b.category.slice(0,5)+'…' : b.category;
+        const handle = ready ? `<circle class="resize-handle" data-id="${b.id}" data-action="resize" cx="${b.x+b.w}" cy="${b.y+b.h}" r="10"></circle>` : '';
+        return `<g class="booth-group ${selected?'selected':''} ${ready?'move-ready':''}" data-id="${b.id}">
+          <rect class="booth-rect" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="${colorFor(b.category)}"></rect>
+          <text class="booth-number" x="${b.x+14}" y="${b.y+33}">${b.id}</text>
+          <text class="booth-name" x="${b.x+14}" y="${b.y+58}">${escapeHtml(label)}</text>
+          <text class="booth-category" x="${b.x+14}" y="${b.y+b.h-14}">${escapeHtml(cat)}</text>
+          ${handle}
+        </g>`;
+      }).join('');
+
+      let grid = '';
+      for(let x=50; x<MAP_W; x+=50){ grid += `<line class="grid-line ${x%100===0?'major':''}" x1="${x}" y1="0" x2="${x}" y2="${MAP_H}"></line>`; }
+      for(let y=50; y<MAP_H; y+=50){ grid += `<line class="grid-line ${y%100===0?'major':''}" x1="0" y1="${y}" x2="${MAP_W}" y2="${y}"></line>`; }
+
+      return `<svg viewBox="0 0 ${MAP_W} ${MAP_H}" width="${BASE_PX_W}" height="${BASE_PX_H}" aria-label="会場マップ">
+        <rect class="venue-bg" x="2" y="2" width="${MAP_W-4}" height="${MAP_H-4}" rx="26"></rect>
+        ${grid}
+        <rect class="path" x="310" y="55" width="80" height="1025" rx="24"></rect>
+        <rect class="path" x="55" y="470" width="590" height="80" rx="24"></rect>
+        <rect class="zone" x="45" y="70" width="450" height="175" rx="24"></rect>
+        <text class="map-label" x="60" y="55">飲食・物販エリア</text>
+        <text class="tiny-label" x="326" y="585" transform="rotate(90 326 585)">中央通路</text>
+        <text class="map-label" x="56" y="592">休憩・交流エリア</text>
+        <text class="map-label" x="385" y="825">ステージ</text>
+        <text class="map-label" x="80" y="985">入口 / 受付</text>
+        <polygon points="300,1155 350,1115 400,1155" fill="#d97706" opacity=".85"></polygon>
+        <text class="map-label" x="302" y="1182">入口</text>
+        ${booths}
+      </svg>`;
+    }
+
+    function renderMap(){
+      $('visitorMapMount').innerHTML = mapSvg(false);
+      $('editorMapMount').innerHTML = mapSvg(true);
+      attachSvgEvents();
+      applyZoom();
+    }
+
+    function renderLegend(){
+      const html = Object.entries(categories).map(([name, obj]) => `<span class="legend-item"><i class="dot" style="background:${obj.color}"></i>${name}</span>`).join('');
+      $('visitorLegend').innerHTML = html;
+      $('editorLegend').innerHTML = html;
+    }
+
+    function renderFilters(){
+      const names = ['すべて', ...Object.keys(categories)];
+      $('visitorFilters').innerHTML = `<div class="category-select"><label for="visitorFilterSelect">ジャンル</label><select id="visitorFilterSelect">${names.map(name => `<option value="${name}" ${activeFilter===name?'selected':''}>${name}</option>`).join('')}</select></div>`;
+      $('visitorFilterSelect').onchange = (e)=>{ activeFilter = e.target.value; render(); };
+    }
+
+    function renderList(){
+      const categoryOrder = Object.keys(categories);
+      const list = data.booths
+        .filter(b => activeFilter==='すべて' || b.category===activeFilter)
+        .sort((a,b)=>{
+          if(listSort === 'name') return String(a.name).localeCompare(String(b.name), 'ja');
+          if(listSort === 'category'){
+            const ca = categoryOrder.indexOf(a.category);
+            const cb = categoryOrder.indexOf(b.category);
+            return (ca === cb ? Number(a.id)-Number(b.id) : ca-cb);
+          }
+          return Number(a.id)-Number(b.id);
+        });
+      const sortSelect = $('listSortSelect');
+      if(sortSelect){
+        sortSelect.value = listSort;
+        sortSelect.onchange = (e)=>{ listSort = e.target.value; renderList(); };
+      }
+      $('boothList').innerHTML = list.map(b => `<button class="list-item" data-list-id="${b.id}">
+        <strong>${b.id}. ${escapeHtml(b.name)}</strong><span>${escapeHtml(b.description || '詳細情報は準備中です。')}</span>
+        <span class="tag" style="background:${colorFor(b.category)}">${escapeHtml(b.category)}</span>
+      </button>`).join('');
+      document.querySelectorAll('[data-list-id]').forEach(btn=>btn.onclick=()=>openDetail(Number(btn.dataset.listId)));
+    }
+
+    function updateSelectedBar(){
+      const b = getBooth(selectedId);
+      const bar = $('selectedBar');
+      if(!b){ bar.classList.remove('show'); $('infoSelectedHint').textContent='未選択'; $('noSelection').classList.remove('hidden'); $('editForm').classList.add('hidden'); $('editActions').classList.add('hidden'); return; }
+      bar.classList.add('show');
+      $('selectedTitle').textContent = `${b.id}. ${b.name}`;
+      $('selectedSub').textContent = moveReady ? '配置移動モード：ドラッグで移動、黒丸でサイズ変更できます。' : '選択中：移動はまだ開始していません。';
+      $('enableMoveBtn').textContent = moveReady ? '配置移動中' : '配置を動かす';
+      $('enableMoveBtn').classList.toggle('active-btn', moveReady);
+      $('infoSelectedHint').textContent = `${b.id}. ${b.name}`;
+      $('noSelection').classList.add('hidden');
+      $('editForm').classList.remove('hidden');
+      $('editActions').classList.remove('hidden');
+      buildForm('editForm','edit', b);
+    }
+
+    function renderDataFields(){
+      $('noticeText').textContent = data.notice;
+      $('eventNameInput').value = data.eventName;
+      $('noticeInput').value = data.notice;
+      $('jsonBox').value = JSON.stringify(data, null, 2);
+    }
+
+    function render(){
+      renderLegend(); renderFilters(); renderList(); renderMap(); updateSelectedBar(); renderDataFields();
+    }
+
+    function openDetail(id){
+      const b = getBooth(id); if(!b) return;
+      $('detailSheet').innerHTML = `<div class="sheet-head"><div><h3>${b.id}. ${escapeHtml(b.name)}</h3><span class="tag" style="background:${colorFor(b.category)};display:inline-flex;margin-top:7px;border-radius:999px;padding:4px 8px;font-size:12px;font-weight:800">${escapeHtml(b.category)}</span></div><button class="close-x" onclick="closeDetail()">×</button></div>
+      <div class="sheet-body">
+        <div><b>紹介：</b>${escapeHtml(b.description || '準備中')}</div>
+        <div><b>内容：</b>${escapeHtml(b.menu || '-')}</div>
+        <div><b>価格帯：</b>${escapeHtml(b.price || '-')}</div>
+        <div><b>支払い：</b>${escapeHtml(b.payment || '-')}</div>
+        <div><b>SNS：</b>${escapeHtml(b.instagram || '-')}</div>
+      </div>
+      <div class="sheet-actions"><button class="primary" onclick="closeDetail()">閉じる</button></div>`;
+      $('detailSheet').classList.remove('hidden');
+    }
+    function closeDetail(){ $('detailSheet').classList.add('hidden'); }
+    function openSurvey(){ setToast('ここからGoogleフォーム等のアンケートへ遷移する想定です。'); }
+
+    function attachSvgEvents(){
+      const visitorSvg = $('visitorMapMount').querySelector('svg');
+      if(visitorSvg){ visitorSvg.onpointerdown = onVisitorMapPointerDown; }
+      document.querySelectorAll('#editorMapMount .booth-group').forEach(g=>{
+        g.onpointerdown = (e)=>onEditorPointerDown(e, Number(g.dataset.id), e.target?.dataset?.action);
+      });
+    }
+
+    function onVisitorMapPointerDown(e){
+      if(mode !== 'visitor') return;
+      const boothEl = e.target?.closest?.('.booth-group');
+      const vp = $('visitorViewport');
+      visitorPan = {
+        pointerId: e.pointerId,
+        startX: e.clientX,
+        startY: e.clientY,
+        scrollLeft: vp.scrollLeft,
+        scrollTop: vp.scrollTop,
+        boothId: boothEl ? Number(boothEl.dataset.id) : null,
+        moved: false
+      };
+      vp.classList.add('dragging');
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+      e.preventDefault();
+    }
+
+    function svgPoint(evt){
+      const svg = $('editorMapMount').querySelector('svg');
+      const pt = svg.createSVGPoint();
+      pt.x = evt.clientX; pt.y = evt.clientY;
+      return pt.matrixTransform(svg.getScreenCTM().inverse());
+    }
+
+    function onEditorPointerDown(e, id, action){
+      e.preventDefault(); e.stopPropagation();
+      if(selectedId !== id){
+        selectedId = id; moveReady = false; render(); setToast('店舗を選択しました。移動する場合は「配置を動かす」を押してください。'); return;
+      }
+      if(!moveReady){
+        setToast('誤操作防止中：移動するには「配置を動かす」を押してください。');
+        updateSelectedBar();
+        return;
+      }
+      const b = getBooth(id); if(!b) return;
+      const p = svgPoint(e);
+      dragState = { id, action: action === 'resize' ? 'resize' : 'move', startX:p.x, startY:p.y, ox:b.x, oy:b.y, ow:b.w, oh:b.h };
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+    }
+
+    window.addEventListener('pointermove', (e)=>{
+      if(visitorPan){
+        const vp = $('visitorViewport');
+        const dx = e.clientX - visitorPan.startX;
+        const dy = e.clientY - visitorPan.startY;
+        if(Math.abs(dx) > 5 || Math.abs(dy) > 5) visitorPan.moved = true;
+        vp.scrollLeft = visitorPan.scrollLeft - dx;
+        vp.scrollTop = visitorPan.scrollTop - dy;
+        e.preventDefault();
+        return;
+      }
+      if(!dragState) return;
+      const b = getBooth(dragState.id); if(!b) return;
+      const p = svgPoint(e);
+      const dx = p.x - dragState.startX;
+      const dy = p.y - dragState.startY;
+      if(dragState.action === 'move'){
+        b.x = Math.max(10, Math.min(MAP_W - b.w - 10, snapVal(dragState.ox + dx)));
+        b.y = Math.max(10, Math.min(MAP_H - b.h - 10, snapVal(dragState.oy + dy)));
+      }else{
+        b.w = Math.max(70, Math.min(MAP_W - b.x - 10, snapVal(dragState.ow + dx)));
+        b.h = Math.max(55, Math.min(MAP_H - b.y - 10, snapVal(dragState.oh + dy)));
+      }
+      renderMap();
+    });
+    window.addEventListener('pointerup', ()=>{
+      if(visitorPan){
+        $('visitorViewport').classList.remove('dragging');
+        if(!visitorPan.moved && visitorPan.boothId) openDetail(visitorPan.boothId);
+        visitorPan = null;
+      }
+      if(dragState){ dragState=null; render(); }
+    });
+
+    function applyZoom(){
+      ['visitorMapMount','editorMapMount'].forEach(id=>{
+        const svg = $(id).querySelector('svg');
+        if(svg){ svg.setAttribute('width', Math.round(BASE_PX_W * zoom)); svg.setAttribute('height', Math.round(BASE_PX_H * zoom)); }
+      });
+      $('zoomLabel1').textContent = Math.round(zoom*100)+'%';
+      $('zoomLabel2').textContent = Math.round(zoom*100)+'%';
+    }
+    function zoomIn(){ zoom = Math.min(2.4, +(zoom + .15).toFixed(2)); applyZoom(); }
+    function zoomOut(){ zoom = Math.max(.45, +(zoom - .15).toFixed(2)); applyZoom(); }
+    function resetZoom(){ zoom = 1; applyZoom(); }
+    function fitWidth(){
+      const vp = mode==='editor' ? $('editorViewport') : $('visitorViewport');
+      zoom = Math.max(.35, Math.min(2.4, +((vp.clientWidth - 64) / BASE_PX_W).toFixed(2)));
+      applyZoom();
+    }
+    function fitAll(){
+      const vp = mode==='editor' ? $('editorViewport') : $('visitorViewport');
+      const zw = (vp.clientWidth - 64) / BASE_PX_W;
+      const zh = (vp.clientHeight - 72) / BASE_PX_H;
+      zoom = Math.max(.25, Math.min(2.4, +(Math.min(zw, zh)).toFixed(2)));
+      applyZoom();
+      vp.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+    }
+    function centerSelected(){
+      const b = getBooth(selectedId); if(!b){ setToast('店舗を選択してください。'); return; }
+      const vp = $('editorViewport');
+      vp.scrollTo({ left: Math.max(0,(b.x+b.w/2)*zoom - vp.clientWidth/2 + 14), top: Math.max(0,(b.y+b.h/2)*zoom - vp.clientHeight/2 + 14), behavior:'smooth' });
+    }
+
+    function switchVisitorTab(tab){
+      currentVisitorTab = tab;
+      document.querySelectorAll('[data-visitor-tab]').forEach(b=>b.classList.toggle('active', b.dataset.visitorTab===tab));
+      document.querySelectorAll('.visitor-panel').forEach(p=>p.classList.toggle('active', p.id===tab));
+      if(tab === 'mapVisitorTab') setTimeout(()=>{ fitWidth(); $('visitorViewport').scrollTo({ left: 0, top: 0 }); }, 60);
+    }
+
+
+    function unlockEditor(showMessage=true){
+      editorAuthorized = true;
+      $('editorModeBtn').classList.remove('hidden');
+      $('saveBtn').classList.remove('hidden');
+      $('loadBtn').classList.remove('hidden');
+      $('adminUnlockBtn').classList.add('hidden');
+      if(showMessage) setToast('編集権限を確認しました。編集画面を表示できます。');
+    }
+    function requestEditorAccess(){
+      const key = prompt('編集用パスコードを入力してください');
+      if(key === null) return;
+      if(key === ADMIN_KEY){
+        sessionStorage.setItem('marcheEditorAuthorized', '1');
+        unlockEditor(true);
+      }else{
+        setToast('パスコードが違います。');
+      }
+    }
+    function checkEditorAccessFromUrl(){
+      const params = new URLSearchParams(location.search);
+      const urlKey = params.get('adminKey') || params.get('key');
+      if(sessionStorage.getItem('marcheEditorAuthorized') === '1' || urlKey === ADMIN_KEY){
+        unlockEditor(false);
+      }
+    }
+    function switchMode(next){
+      if(next === 'editor' && !editorAuthorized){ requestEditorAccess(); if(!editorAuthorized) return; }
+      mode = next; closeDetail();
+      $('visitorView').classList.toggle('hidden', mode !== 'visitor');
+      $('editorView').classList.toggle('hidden', mode !== 'editor');
+      $('visitorModeBtn').classList.toggle('active', mode === 'visitor');
+      $('editorModeBtn').classList.toggle('active', mode === 'editor');
+      if(mode === 'visitor' && currentVisitorTab === 'mapVisitorTab') setTimeout(fitWidth, 40);
+      if(mode === 'editor') setTimeout(fitWidth, 40);
+    }
+    function switchTab(tab){
+      currentTab = tab;
+      document.querySelectorAll('.edit-tabs button').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+      document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active', p.id===tab));
+      if(tab==='layoutTab') setTimeout(()=>{ applyZoom(); },40);
+      updateSelectedBar();
+    }
+
+    function saveLocal(){ localStorage.setItem(storageKey, JSON.stringify(data)); setToast('ブラウザ内に保存しました。'); }
+    function loadLocal(){
+      const raw = localStorage.getItem(storageKey);
+      if(!raw){ setToast('保存データがまだありません。'); return; }
+      try{ data = JSON.parse(raw); selectedId=null; moveReady=false; render(); setToast('保存データを読み込みました。'); }
+      catch{ setToast('保存データの読込に失敗しました。'); }
+    }
+
+    function initEvents(){
+      $('visitorModeBtn').onclick = ()=>switchMode('visitor');
+      $('editorModeBtn').onclick = ()=>switchMode('editor');
+      $('adminUnlockBtn').onclick = requestEditorAccess;
+      $('saveBtn').onclick = saveLocal;
+      $('loadBtn').onclick = loadLocal;
+      $('snapBtn').onclick = ()=>{ snap=!snap; $('snapBtn').textContent = `グリッド吸着 ${snap?'ON':'OFF'}`; setToast(`グリッド吸着を${snap?'ON':'OFF'}にしました。`); };
+      $('enableMoveBtn').onclick = ()=>{ if(!selectedId){ setToast('店舗を選択してください。'); return; } moveReady=true; render(); setToast('配置移動モードにしました。'); };
+      $('stopMoveBtn').onclick = ()=>{ moveReady=false; render(); setToast('移動モードを解除しました。'); };
+      document.querySelectorAll('.edit-tabs button').forEach(btn=>btn.onclick=()=>switchTab(btn.dataset.tab));
+      document.querySelectorAll('[data-visitor-tab]').forEach(btn=>btn.onclick=()=>switchVisitorTab(btn.dataset.visitorTab));
+
+      buildForm('addForm','add', { id: nextId(), name:'', category:'飲食', description:'', menu:'', price:'', payment:'', instagram:'' });
+      $('addBoothBtn').onclick = ()=>{
+        const f = readForm('add');
+        if(data.booths.some(b=>b.id===f.id)){ f.id = nextId(); }
+        data.booths.push({ ...f, x: 245, y: 540, w: 185, h: 95 });
+        selectedId = f.id; moveReady=false;
+        buildForm('addForm','add', { id: nextId(), name:'', category:'飲食' });
+        render(); switchTab('layoutTab'); setToast('追加しました。位置はレイアウト編集で調整してください。');
+      };
+      $('addSampleBtn').onclick = ()=>{
+        const id = nextId();
+        data.booths.push({ id, name:`サンプル店舗${id}`, category:'その他', x: 245, y: 540, w: 180, h: 90, description:'仮の出店者情報です。', menu:'内容未設定', price:'-', payment:'-', instagram:'' });
+        selectedId=id; moveReady=false; render(); switchTab('layoutTab'); setToast('サンプル店舗を追加しました。');
+      };
+      $('applyInfoBtn').onclick = ()=>{
+        const b = getBooth(selectedId); if(!b) return;
+        const f = readForm('edit');
+        if(f.id !== b.id && data.booths.some(x=>x.id===f.id)){ setToast('その番号は既に使われています。'); return; }
+        Object.assign(b, f); selectedId = f.id; moveReady=false; render(); setToast('店舗情報を保存しました。');
+      };
+      $('duplicateBtn').onclick = ()=>{
+        const b = getBooth(selectedId); if(!b) return;
+        const id = nextId();
+        data.booths.push({ ...structuredClone(b), id, name: b.name + ' コピー', x: Math.min(MAP_W-b.w-10, b.x+25), y: Math.min(MAP_H-b.h-10, b.y+25) });
+        selectedId=id; moveReady=false; render(); setToast('複製しました。');
+      };
+      $('deleteBtn').onclick = ()=>{
+        if(!selectedId) return;
+        const b = getBooth(selectedId);
+        if(!confirm(`${b?.name || '選択中の店舗'}を削除しますか？`)) return;
+        data.booths = data.booths.filter(x=>x.id!==selectedId); selectedId=null; moveReady=false; render(); setToast('削除しました。');
+      };
+      $('exportBtn').onclick = ()=>{ data.eventName=$('eventNameInput').value; data.notice=$('noticeInput').value; renderDataFields(); setToast('JSONに出力しました。'); };
+      $('importBtn').onclick = ()=>{
+        try{ const parsed=JSON.parse($('jsonBox').value); if(!parsed.booths || !Array.isArray(parsed.booths)) throw new Error('invalid'); data=parsed; selectedId=null; moveReady=false; render(); setToast('JSONから読み込みました。'); }
+        catch{ setToast('JSONの形式を確認してください。'); }
+      };
+      $('copyJsonBtn').onclick = async()=>{ try{ await navigator.clipboard.writeText($('jsonBox').value); setToast('JSONをコピーしました。'); }catch{ $('jsonBox').select(); document.execCommand('copy'); setToast('JSONをコピーしました。'); } };
+      $('resetBtn').onclick = ()=>{ if(!confirm('初期データに戻しますか？')) return; data=structuredClone(initialData); selectedId=null; moveReady=false; render(); setToast('初期データに戻しました。'); };
+      $('noticeInput').addEventListener('change', ()=>{ data.notice=$('noticeInput').value; render(); });
+      $('eventNameInput').addEventListener('change', ()=>{ data.eventName=$('eventNameInput').value; renderDataFields(); });
+    }
+
+    initEvents();
+    checkEditorAccessFromUrl();
+    render();
+    setTimeout(()=>{ if(currentVisitorTab === 'mapVisitorTab') fitWidth(); }, 120);
+  </script>
+</body>
+</html>

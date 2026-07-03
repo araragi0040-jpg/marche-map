@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#fff8ed" />
-  <title>めぐるマルシェマップ v5</title>
+  <title>めぐるマルシェマップ v6</title>
   <style>
     :root{
       --bg:#f6f1e8;--paper:#fffaf1;--panel:#fffdf8;--ink:#29251f;--muted:#746b60;
@@ -47,26 +47,34 @@
     .sheet-backdrop{position:fixed;inset:0;background:rgba(30,24,18,.38);z-index:80}.detail-sheet{position:fixed;z-index:81;left:50%;bottom:0;transform:translateX(-50%);width:min(100%,560px);max-height:82dvh;overflow:auto;background:#fffaf2;border-radius:26px 26px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -18px 44px rgba(35,26,18,.2)}
     .sheet-handle{width:44px;height:5px;background:#d5c9b9;border-radius:99px;margin:0 auto 15px}.sheet-top{display:flex;justify-content:space-between;gap:12px;align-items:start}.sheet-top h3{margin:0;font-size:21px}.sheet-close{width:36px;height:36px;border-radius:50%;background:#eee5d9}.sheet-tag{display:inline-flex;padding:5px 9px;border-radius:99px;font-size:11px;font-weight:900;margin:8px 0}.detail-grid{display:grid;gap:10px;font-size:13px;line-height:1.65;color:#5b5349}.detail-grid b{color:var(--ink)}
 
-    /* Desktop editor */
-    #editorApp{height:100dvh;overflow:hidden;background:#e9e5df}
+    /* Desktop editor - single screen workspace */
+    #editorApp{height:100dvh;overflow:hidden;background:#e7e3dd}
     .editor-mobile-block{display:none}
-    .editor-header{height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 18px;background:#26231f;color:#fff;border-bottom:1px solid #3f3932}.editor-brand{display:flex;align-items:center;gap:12px}.editor-brand-mark{width:38px;height:38px;border-radius:12px;background:var(--accent);display:grid;place-items:center;font-weight:900}.editor-brand h1{margin:0;font-size:17px}.editor-brand p{margin:2px 0 0;color:#c6beb4;font-size:11px}.editor-actions{display:flex;gap:8px;align-items:center}.editor-actions button{border-radius:10px;padding:9px 12px;background:#39342e;color:#fff}.editor-actions .save{background:var(--accent)}
-    .editor-layout{height:calc(100dvh - 64px);display:grid;grid-template-columns:280px minmax(500px,1fr) 320px;min-width:1080px}
-    .editor-side{background:#faf8f4;border-right:1px solid #d4ccc1;overflow:auto}.editor-side.right{border-right:0;border-left:1px solid #d4ccc1}.side-tabs{position:sticky;top:0;z-index:5;display:grid;grid-template-columns:1fr 1fr;background:#f3efe8;border-bottom:1px solid #d4ccc1}.side-tabs button{padding:13px 8px;background:transparent;color:#6d645b;font-size:12px;font-weight:900;border-bottom:3px solid transparent}.side-tabs button.active{color:var(--accent);border-bottom-color:var(--accent);background:#fffaf3}.side-panel{display:none;padding:14px}.side-panel.active{display:block}.side-heading{font-size:13px;margin:0 0 11px}.side-note{font-size:11px;line-height:1.55;color:var(--muted);margin:0 0 12px}.form-stack{display:grid;gap:11px}.field{display:grid;gap:5px}.field label{font-size:11px;font-weight:800;color:#6f665d}.field input,.field select,.field textarea{width:100%;border:1px solid #d4cabd;border-radius:10px;padding:9px 10px;background:#fff;color:var(--ink);outline:none}.field textarea{min-height:76px;resize:vertical}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px}.side-btn{width:100%;border-radius:10px;padding:10px;background:#eee7de;color:var(--ink);font-weight:800}.side-btn.primary{background:var(--accent);color:#fff}.side-btn.danger{background:#fff0ef;color:var(--danger)}
-    .palette-section{margin-bottom:16px}.palette-section h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#8a8075;margin:0 0 8px}.palette-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.palette-item{min-height:82px;border:1px solid #ddd3c7;border-radius:13px;background:#fff;padding:9px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;gap:7px}.palette-item:hover{border-color:#c8792c;box-shadow:0 7px 18px rgba(74,52,29,.09)}.palette-icon{height:30px;display:flex;align-items:center}.shape-preview{display:block;background:var(--palette-color,#ddd);border:2px solid rgba(39,35,31,.35)}.shape-preview.rect{width:46px;height:25px;border-radius:3px}.shape-preview.rounded{width:46px;height:25px;border-radius:9px}.shape-preview.square{width:29px;height:29px;border-radius:4px}.shape-preview.circle{width:30px;height:30px;border-radius:50%}.palette-item strong{font-size:12px}.palette-item small{font-size:10px;color:var(--muted)}
-    .editor-center{min-width:0;display:flex;flex-direction:column;background:#ddd8d1}.canvas-toolbar{height:51px;flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:0 12px;background:#f7f4ef;border-bottom:1px solid #cfc7bc}.tool-group{display:flex;gap:6px;align-items:center}.tool-btn{height:34px;border-radius:8px;padding:0 10px;background:#fff;box-shadow:inset 0 0 0 1px #d6cdc1;color:#4e473f;font-size:12px;font-weight:800}.tool-btn.active{background:#2e2a25;color:#fff}.zoom-text{font-size:11px;color:#746b62;min-width:42px;text-align:center}.editor-viewport{flex:1;min-height:0;overflow:auto;position:relative;cursor:grab;overscroll-behavior:contain}.editor-viewport.dragging{cursor:grabbing}.editor-canvas-inner{width:max-content;height:max-content;padding:58px}.editor-canvas-inner svg{display:block;background:#fff;box-shadow:0 16px 36px rgba(45,37,28,.23);user-select:none;touch-action:none}
-    .right-title{position:sticky;top:0;z-index:5;padding:14px;background:#f3efe8;border-bottom:1px solid #d4ccc1}.right-title h2{font-size:13px;margin:0}.selection-empty{padding:22px 14px;text-align:center;color:#81786e;font-size:12px;line-height:1.7}.selection-empty .big{font-size:35px;display:block;margin-bottom:8px}.property-body{padding:14px}.move-banner{padding:10px;border-radius:11px;background:#fff1da;color:#8a4a0d;font-size:11px;line-height:1.5;margin-bottom:11px}.property-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.property-actions .full{grid-column:1/-1}
-    .statusbar{position:absolute;left:12px;bottom:12px;z-index:6;display:flex;gap:7px}.status-pill{padding:7px 9px;border-radius:9px;background:rgba(42,38,33,.86);color:#fff;font-size:10px;backdrop-filter:blur(8px)}
-    .toast{position:fixed;z-index:200;left:50%;top:76px;transform:translateX(-50%);background:#2d2924;color:#fff;padding:11px 15px;border-radius:12px;box-shadow:var(--shadow);font-size:12px}
-    .modal-backdrop{position:fixed;inset:0;background:rgba(22,18,14,.5);z-index:150}.modal{position:fixed;z-index:151;left:50%;top:50%;transform:translate(-50%,-50%);width:min(480px,calc(100vw - 30px));background:#fffaf2;border-radius:22px;padding:18px;box-shadow:0 22px 64px rgba(27,21,15,.3)}.modal h2{margin:0 0 8px;font-size:19px}.modal p{font-size:12px;line-height:1.65;color:var(--muted)}.modal textarea{width:100%;min-height:240px;border:1px solid var(--line);border-radius:12px;padding:11px;font-family:ui-monospace,monospace;font-size:11px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.modal-actions button{padding:10px 13px;border-radius:10px;background:#eee7dd}.modal-actions .primary{background:var(--accent);color:#fff}
+    .editor-header{height:56px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:0 14px;background:#26231f;color:#fff;border-bottom:1px solid #433d35}
+    .editor-brand{display:flex;align-items:center;gap:10px;min-width:210px}.editor-brand-mark{width:34px;height:34px;border-radius:10px;background:var(--accent);display:grid;place-items:center;font-weight:900}.editor-brand h1{margin:0;font-size:15px}.editor-brand p{margin:1px 0 0;color:#c9c1b7;font-size:10px}
+    .editor-head-center{min-width:0;display:flex;align-items:center;gap:8px;color:#d8d0c6;font-size:11px}.editor-head-center b{max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}.head-state{padding:5px 8px;border-radius:8px;background:#3a352f;color:#d9d0c6}
+    .editor-actions{display:flex;gap:6px;align-items:center}.editor-actions button{height:34px;border-radius:9px;padding:0 11px;background:#39342e;color:#fff;font-size:11px;font-weight:800}.editor-actions button:hover{background:#4a443c}.editor-actions .save{background:var(--accent)}
+    .editor-layout{height:calc(100dvh - 56px);display:grid;grid-template-columns:270px minmax(520px,1fr) 360px;grid-template-rows:minmax(0,1fr);min-width:1120px;min-height:0;overflow:hidden}
+    .dock{min-width:0;min-height:0;background:#faf8f4;border-right:1px solid #cec6bb;overflow:hidden;display:flex;flex-direction:column}.dock.right{border-right:0;border-left:1px solid #cec6bb}.dock-scroll{min-height:0;overflow:auto;overscroll-behavior:contain}.dock-title{height:43px;flex:0 0 43px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 12px;background:#f0ece5;border-bottom:1px solid #d7cec2}.dock-title h2{font-size:12px;margin:0}.dock-title small{font-size:9px;color:var(--muted)}
+    .dock-section{padding:11px 12px;border-bottom:1px solid #e1d9ce}.dock-section:last-child{border-bottom:0}.section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.section-head h3{font-size:11px;margin:0}.section-head span{font-size:9px;color:var(--muted)}
+    .form-stack{display:grid;gap:8px}.field{display:grid;gap:3px}.field label{font-size:10px;font-weight:850;color:#6d645a}.field input,.field select,.field textarea{width:100%;border:1px solid #d4cabd;border-radius:8px;padding:7px 8px;background:#fff;color:var(--ink);outline:none;font-size:11px}.field input,.field select{height:32px}.field textarea{min-height:50px;resize:vertical;line-height:1.45}.field input:focus,.field select:focus,.field textarea:focus{border-color:#c6792e;box-shadow:0 0 0 2px rgba(198,121,46,.12)}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:7px}.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+    .side-btn{width:100%;height:33px;border-radius:8px;padding:0 9px;background:#eee7de;color:var(--ink);font-size:11px;font-weight:850}.side-btn:hover{filter:brightness(.98)}.side-btn.primary{background:var(--accent);color:#fff}.side-btn.danger{background:#fff0ef;color:var(--danger)}
+    .venue-apply-row{display:grid;grid-template-columns:1fr auto;gap:7px;align-items:end}.venue-apply-row .side-btn{width:auto;padding:0 12px}
+    .palette-wrap{flex:1;min-height:0;display:flex;flex-direction:column}.palette-scroll{flex:1;min-height:0;overflow:auto;padding:10px 11px 14px}.palette-section{margin-bottom:12px}.palette-section h3{font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:#887e73;margin:0 0 6px}.palette-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.palette-item{height:62px;border:1px solid #ddd3c7;border-radius:10px;background:#fff;padding:7px;text-align:left;display:grid;grid-template-columns:38px minmax(0,1fr);grid-template-rows:auto auto;column-gap:6px;align-items:center}.palette-item:hover{border-color:#c8792c;box-shadow:0 5px 14px rgba(74,52,29,.08);transform:translateY(-1px)}.palette-icon{grid-row:1/3;height:38px;display:flex;align-items:center;justify-content:center}.shape-preview{display:block;background:var(--palette-color,#ddd);border:2px solid rgba(39,35,31,.32)}.shape-preview.rectangle,.shape-preview.rect{width:36px;height:22px;border-radius:2px}.shape-preview.rounded{width:36px;height:22px;border-radius:8px}.shape-preview.square{width:27px;height:27px;border-radius:3px}.shape-preview.circle{width:28px;height:28px;border-radius:50%}.palette-item strong{font-size:10px;line-height:1.2}.palette-item small{font-size:9px;color:var(--muted)}
+    .editor-center{min-width:0;min-height:0;display:flex;flex-direction:column;background:#d9d4cd}.canvas-toolbar{height:45px;flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:0 10px;background:#f6f3ee;border-bottom:1px solid #cfc7bc}.tool-group{display:flex;gap:5px;align-items:center}.tool-divider{width:1px;height:24px;background:#d9d0c5;margin:0 2px}.tool-btn{height:31px;border-radius:7px;padding:0 9px;background:#fff;box-shadow:inset 0 0 0 1px #d6cdc1;color:#4e473f;font-size:10px;font-weight:850}.tool-btn:hover{background:#fbf6ef}.tool-btn.active{background:#2e2a25;color:#fff;box-shadow:none}.tool-btn.move-active{background:#c96f16;color:#fff;box-shadow:none}.zoom-text{font-size:10px;color:#746b62;min-width:38px;text-align:center}.canvas-guide{font-size:9px;color:#746b62;white-space:nowrap}.editor-viewport{flex:1;min-height:0;overflow:auto;position:relative;cursor:grab;overscroll-behavior:contain}.editor-viewport.dragging{cursor:grabbing}.editor-canvas-inner{width:max-content;height:max-content;padding:44px}.editor-canvas-inner svg{display:block;background:#fff;box-shadow:0 14px 34px rgba(45,37,28,.22);user-select:none;touch-action:none}
+    .statusbar{position:absolute;left:10px;bottom:10px;z-index:6;display:flex;gap:6px}.status-pill{padding:6px 8px;border-radius:8px;background:rgba(42,38,33,.86);color:#fff;font-size:9px;backdrop-filter:blur(8px)}
+    .selection-empty{padding:24px 16px;text-align:center;color:#81786e;font-size:11px;line-height:1.7}.selection-empty .big{font-size:32px;display:block;margin-bottom:7px}.property-body{height:100%;min-height:0;display:flex;flex-direction:column}.property-scroll{flex:1;min-height:0;overflow:auto;padding:8px 10px}.property-group{padding-bottom:7px;margin-bottom:7px;border-bottom:1px solid #e1d8cc}.property-group:last-child{border-bottom:0;margin-bottom:0}.property-group-title{font-size:10px;font-weight:900;color:#675e54;margin:0 0 5px}.move-banner{padding:8px 9px;border-radius:9px;background:#fff1da;color:#8a4a0d;font-size:10px;line-height:1.45;margin-bottom:8px}.property-actions{flex:0 0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:7px 10px;background:#f3efe8;border-top:1px solid #d7cec2}.property-actions .full{grid-column:1/-1}.property-actions .side-btn{height:32px}.property-scroll .form-stack{gap:6px}.property-scroll .field input,.property-scroll .field select{height:29px;padding:5px 7px}.property-scroll .field textarea{min-height:38px;height:38px;padding:5px 7px}
+    .hint-card{padding:8px 9px;border-radius:9px;background:#eef5f6;color:#35565a;font-size:9px;line-height:1.5}.kbd{display:inline-grid;place-items:center;min-width:19px;height:18px;padding:0 4px;border:1px solid #c8c0b5;border-bottom-width:2px;border-radius:5px;background:#fff;color:#514a42;font-size:9px;font-weight:800}
+    .toast{position:fixed;z-index:200;left:50%;top:66px;transform:translateX(-50%);background:#2d2924;color:#fff;padding:10px 14px;border-radius:11px;box-shadow:var(--shadow);font-size:11px}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(22,18,14,.5);z-index:150}.modal{position:fixed;z-index:151;left:50%;top:50%;transform:translate(-50%,-50%);width:min(520px,calc(100vw - 30px));max-height:calc(100dvh - 50px);overflow:auto;background:#fffaf2;border-radius:20px;padding:17px;box-shadow:0 22px 64px rgba(27,21,15,.3)}.modal h2{margin:0 0 7px;font-size:17px}.modal p{font-size:11px;line-height:1.6;color:var(--muted)}.modal textarea{width:100%;min-height:220px;border:1px solid var(--line);border-radius:11px;padding:10px;font-family:ui-monospace,monospace;font-size:10px}.modal-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:11px}.modal-actions button{height:34px;padding:0 12px;border-radius:9px;background:#eee7dd;font-size:11px;font-weight:800}.modal-actions .primary{background:var(--accent);color:#fff}.public-info-grid{display:grid;gap:10px}
 
     /* SVG */
     .venue-outline{fill:#fffdf8;stroke:#8d8377;stroke-width:.09}.venue-grid{stroke:#eee7df;stroke-width:.025}.venue-grid.major{stroke:#dcd1c3;stroke-width:.045}.venue-missing{fill:#d8d2cb;opacity:.7}.object{cursor:pointer}.obj-shape{stroke:rgba(36,32,28,.38);stroke-width:.06;filter:drop-shadow(0 .13px .2px rgba(42,32,20,.2))}.object.selected .obj-shape{stroke:#111;stroke-width:.12;stroke-dasharray:.28 .16}.object.move-enabled .obj-shape{stroke:#c96f16;stroke-width:.14;stroke-dasharray:none}.obj-number{fill:#25211d;font-size:.58px;font-weight:950;pointer-events:none;text-anchor:middle;dominant-baseline:middle}.obj-name{fill:#25211d;font-size:.34px;font-weight:850;pointer-events:none;text-anchor:middle}.obj-sub{fill:rgba(37,33,29,.68);font-size:.24px;font-weight:750;pointer-events:none;text-anchor:middle}.resize-handle{fill:#171513;stroke:#fff;stroke-width:.07;cursor:nwse-resize}.rotate-label{fill:#62594f;font-size:.22px;font-weight:800;pointer-events:none}.entry-arrow{fill:none;stroke:#1e3a3d;stroke-width:.12;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
 
-    @media(max-width:899px){
+    @media(max-width:999px){
       #editorApp{height:auto;min-height:100dvh;overflow:auto}.editor-header,.editor-layout{display:none}.editor-mobile-block{display:grid;min-height:100dvh;place-items:center;padding:24px;background:#f4efe8}.editor-mobile-card{width:min(100%,430px);padding:25px;border-radius:24px;background:#fffaf2;box-shadow:var(--shadow);text-align:center}.editor-mobile-card h2{margin:0 0 8px}.editor-mobile-card p{font-size:13px;line-height:1.7;color:var(--muted)}.editor-mobile-card button{border-radius:13px;padding:11px 15px;background:var(--accent);color:#fff;font-weight:800}
     }
-    @media(min-width:900px){
+    @media(min-width:1000px){
       #publicApp{display:grid;place-items:start center;padding:20px 0}.public-shell{min-height:calc(100dvh - 40px);height:calc(100dvh - 40px);border-radius:28px;overflow:hidden}.public-content{height:calc(100% - 66px - 74px);overflow:auto}.public-nav{bottom:20px;border-radius:0 0 28px 28px}.public-map-viewport{height:calc(100dvh - 330px)}
     }
   </style>
@@ -115,58 +123,68 @@
   </div>
 
   <div id="editorApp" class="hidden">
-    <div class="editor-mobile-block"><div class="editor-mobile-card"><h2>編集はPC専用です</h2><p>会場のサイズやブース配置を正確に編集するため、横幅900px以上のPCブラウザで開いてください。</p><button id="mobileBackPublic">公開画面へ戻る</button></div></div>
+    <div class="editor-mobile-block"><div class="editor-mobile-card"><h2>編集はPC専用です</h2><p>会場設定・パレット・詳細編集を1画面で扱うため、横幅1000px以上のPCブラウザで開いてください。</p><button id="mobileBackPublic">公開画面へ戻る</button></div></div>
     <header class="editor-header">
-      <div class="editor-brand"><div class="editor-brand-mark">M</div><div><h1>マルシェマップ編集</h1><p>PC用・簡易CADレイアウトエディター</p></div></div>
-      <div class="editor-actions"><button id="previewBtn">スマホ公開画面</button><button id="jsonBtn">JSON</button><button id="loadLocalBtn">読込</button><button id="saveLocalBtn" class="save">保存</button></div>
+      <div class="editor-brand"><div class="editor-brand-mark">M</div><div><h1>マルシェマップ編集</h1><p>1画面完結・PC用レイアウトエディター</p></div></div>
+      <div class="editor-head-center"><span class="head-state">編集中</span><b id="editorEventTitle">めぐるマルシェ</b><span>初回クリックは選択のみ</span></div>
+      <div class="editor-actions"><button id="previewBtn">スマホ確認</button><button id="publicInfoBtn">公開情報</button><button id="jsonBtn">JSON</button><button id="loadLocalBtn">読込</button><button id="saveLocalBtn" class="save">保存</button></div>
     </header>
     <div class="editor-layout">
-      <aside class="editor-side">
-        <div class="side-tabs"><button class="active" data-left-tab="venuePanel">会場設定</button><button data-left-tab="palettePanel">パレット</button></div>
-        <section id="venuePanel" class="side-panel active">
-          <h2 class="side-heading">会場全体</h2><p class="side-note">会場の縦横サイズと基本形状を設定します。単位はメートル想定です。</p>
+      <aside class="dock left">
+        <div class="dock-title"><h2>会場・配置</h2><small>左から追加</small></div>
+        <div class="dock-section">
+          <div class="section-head"><h3>会場設定</h3><span>単位：m</span></div>
           <div class="form-stack">
             <div class="field"><label>イベント名</label><input id="eventNameEditor" /></div>
-            <div class="field"><label>会場形状</label><select id="venueShape"><option value="rectangle">長方形</option><option value="rounded">角丸長方形</option><option value="lshape">L字型</option></select></div>
-            <div class="two-col"><div class="field"><label>横幅（m）</label><input id="venueWidth" type="number" min="6" max="80" step="0.5" /></div><div class="field"><label>縦幅（m）</label><input id="venueHeight" type="number" min="8" max="120" step="0.5" /></div></div>
-            <div class="field"><label>グリッド間隔（m）</label><select id="gridSize"><option value="0.5">0.5m</option><option value="1">1m</option><option value="2">2m</option></select></div>
-            <button id="applyVenueBtn" class="side-btn primary">会場設定を反映</button>
+            <div class="field"><label>会場テンプレート</label><select id="venuePreset"><option value="custom">カスタム</option><option value="12x20">小規模 12 × 20</option><option value="18x30">標準 18 × 30</option><option value="24x40">大型 24 × 40</option><option value="30x50">屋外 30 × 50</option></select></div>
+            <div class="two-col"><div class="field"><label>形状</label><select id="venueShape"><option value="rectangle">長方形</option><option value="rounded">角丸長方形</option><option value="lshape">L字型</option></select></div><div class="field"><label>グリッド</label><select id="gridSize"><option value="0.5">0.5m</option><option value="1">1m</option><option value="2">2m</option></select></div></div>
+            <div class="venue-apply-row"><div class="two-col"><div class="field"><label>横幅</label><input id="venueWidth" type="number" min="6" max="80" step="0.5" /></div><div class="field"><label>縦幅</label><input id="venueHeight" type="number" min="8" max="120" step="0.5" /></div></div><button id="applyVenueBtn" class="side-btn primary">反映</button></div>
           </div>
-          <hr style="border:0;border-top:1px solid #ded5ca;margin:18px 0">
-          <h2 class="side-heading">公開情報</h2>
-          <div class="form-stack"><div class="field"><label>運営からのお知らせ</label><textarea id="noticeEditor"></textarea></div><div class="field"><label>アンケートURL</label><input id="surveyUrlEditor" placeholder="https://..." /></div><button id="applyPublicInfoBtn" class="side-btn">公開情報を反映</button></div>
-        </section>
-        <section id="palettePanel" class="side-panel">
-          <h2 class="side-heading">配置パレット</h2><p class="side-note">クリックすると会場中央付近へ追加されます。追加後、右側でサイズ・形状・情報を変更できます。</p>
-          <div id="paletteRoot"></div>
-        </section>
+        </div>
+        <div class="palette-wrap">
+          <div class="dock-section" style="padding-bottom:8px"><div class="section-head" style="margin:0"><h3>配置パレット</h3><span>クリックで中央へ追加</span></div></div>
+          <div id="paletteRoot" class="palette-scroll"></div>
+        </div>
       </aside>
 
       <main class="editor-center">
         <div class="canvas-toolbar">
-          <div class="tool-group"><button id="selectToolBtn" class="tool-btn active">選択</button><button id="moveToolBtn" class="tool-btn">配置移動 OFF</button><button id="snapToolBtn" class="tool-btn active">吸着 ON</button></div>
-          <div class="tool-group"><button id="editorZoomOut" class="tool-btn">−</button><span id="editorZoomText" class="zoom-text">100%</span><button id="editorZoomIn" class="tool-btn">＋</button><button id="editorFit" class="tool-btn">全体</button><button id="editorCenterSelected" class="tool-btn">選択へ</button></div>
+          <div class="tool-group"><button id="selectToolBtn" class="tool-btn active">① 選択</button><button id="moveToolBtn" class="tool-btn">🔒 配置ロック</button><button id="snapToolBtn" class="tool-btn active">吸着 ON</button><span class="canvas-guide">選択 → ロック解除 → ドラッグ</span></div>
+          <div class="tool-group"><button id="editorZoomOut" class="tool-btn">−</button><span id="editorZoomText" class="zoom-text">100%</span><button id="editorZoomIn" class="tool-btn">＋</button><span class="tool-divider"></span><button id="editorFit" class="tool-btn">全体表示</button><button id="editorCenterSelected" class="tool-btn">選択へ</button></div>
         </div>
         <div id="editorViewport" class="editor-viewport"><div id="editorCanvasInner" class="editor-canvas-inner"></div><div class="statusbar"><div id="venueStatus" class="status-pill"></div><div id="selectionStatus" class="status-pill">未選択</div></div></div>
       </main>
 
-      <aside class="editor-side right">
-        <div class="right-title"><h2>選択中のオブジェクト</h2></div>
-        <div id="selectionEmpty" class="selection-empty"><span class="big">◻</span>会場上のブースや設備をクリックすると、ここで詳細編集できます。</div>
+      <aside class="dock right">
+        <div class="dock-title"><h2>選択中の設定</h2><small>右側で数値調整</small></div>
+        <div id="selectionEmpty" class="selection-empty"><span class="big">◻</span>会場上のブース・入口・受付などをクリックしてください。<br>1回目のクリックでは移動しません。</div>
         <div id="propertyBody" class="property-body hidden">
-          <div id="moveBanner" class="move-banner hidden">配置移動がONです。選択中のオブジェクトをドラッグして移動し、右下の黒いハンドルでサイズ変更できます。</div>
-          <div class="form-stack">
-            <div class="two-col"><div class="field"><label>番号</label><input id="propNumber" /></div><div class="field"><label>種類</label><select id="propType"><option value="booth">店舗</option><option value="entrance">入口</option><option value="reception">受付</option><option value="stage">ステージ</option><option value="rest">休憩</option><option value="facility">設備</option></select></div></div>
-            <div class="field"><label>名称</label><input id="propName" /></div>
-            <div class="field"><label>ジャンル</label><select id="propCategory"></select></div>
-            <div class="field"><label>形状</label><select id="propShape"><option value="rectangle">長方形</option><option value="rounded">角丸</option><option value="square">正方形</option><option value="circle">円形</option></select></div>
-            <div class="two-col"><div class="field"><label>横幅（m）</label><input id="propWidth" type="number" min="0.5" step="0.5" /></div><div class="field"><label>縦幅（m）</label><input id="propHeight" type="number" min="0.5" step="0.5" /></div></div>
-            <div class="two-col"><div class="field"><label>X位置</label><input id="propX" type="number" step="0.5" /></div><div class="field"><label>Y位置</label><input id="propY" type="number" step="0.5" /></div></div>
-            <div class="field"><label>説明</label><textarea id="propDescription"></textarea></div>
-            <div class="field"><label>販売・実施内容</label><textarea id="propMenu"></textarea></div>
-            <div class="field"><label>価格帯</label><input id="propPrice" /></div>
-            <div class="field"><label>支払い方法</label><input id="propPayment" /></div>
-            <div class="field"><label>リンク・SNS</label><input id="propLink" /></div>
+          <div class="property-scroll">
+            <div id="moveBanner" class="move-banner hidden">配置ロック解除中です。選択中の対象をドラッグして移動し、右下の黒いハンドルでサイズ変更できます。</div>
+            <div class="property-group">
+              <h3 class="property-group-title">基本情報</h3>
+              <div class="form-stack">
+                <div class="two-col"><div class="field"><label>番号</label><input id="propNumber" /></div><div class="field"><label>種類</label><select id="propType"><option value="booth">店舗</option><option value="entrance">入口</option><option value="reception">受付</option><option value="stage">ステージ</option><option value="rest">休憩</option><option value="facility">設備</option></select></div></div>
+                <div class="field"><label>名称</label><input id="propName" /></div>
+                <div class="two-col"><div class="field"><label>ジャンル</label><select id="propCategory"></select></div><div class="field"><label>形状</label><select id="propShape"><option value="rectangle">長方形</option><option value="rounded">角丸</option><option value="square">正方形</option><option value="circle">円形</option></select></div></div>
+              </div>
+            </div>
+            <div class="property-group">
+              <h3 class="property-group-title">サイズ・位置</h3>
+              <div class="form-stack">
+                <div class="field"><label>サイズテンプレート</label><select id="propSizePreset"><option value="custom">カスタム</option><option value="2x2">小型 2 × 2</option><option value="3x2">標準 3 × 2</option><option value="4x2">横長 4 × 2</option><option value="3x3">正方形 3 × 3</option><option value="6x3">大型 6 × 3</option></select></div>
+                <div class="two-col"><div class="field"><label>横幅</label><input id="propWidth" type="number" min="0.5" step="0.5" /></div><div class="field"><label>縦幅</label><input id="propHeight" type="number" min="0.5" step="0.5" /></div></div>
+                <div class="two-col"><div class="field"><label>X位置</label><input id="propX" type="number" step="0.5" /></div><div class="field"><label>Y位置</label><input id="propY" type="number" step="0.5" /></div></div>
+              </div>
+            </div>
+            <div class="property-group">
+              <h3 class="property-group-title">公開する詳細情報</h3>
+              <div class="form-stack">
+                <div class="two-col"><div class="field"><label>説明</label><textarea id="propDescription"></textarea></div><div class="field"><label>販売・実施内容</label><textarea id="propMenu"></textarea></div></div>
+                <div class="two-col"><div class="field"><label>価格帯</label><input id="propPrice" /></div><div class="field"><label>支払い方法</label><input id="propPayment" /></div></div>
+                <div class="field"><label>リンク・SNS</label><input id="propLink" /></div>
+              </div>
+            </div>
           </div>
           <div class="property-actions"><button id="applyPropBtn" class="side-btn primary full">変更を反映</button><button id="duplicatePropBtn" class="side-btn">複製</button><button id="deletePropBtn" class="side-btn danger">削除</button></div>
         </div>
@@ -177,11 +195,12 @@
   <div id="sheetBackdrop" class="sheet-backdrop hidden"></div><div id="detailSheet" class="detail-sheet hidden"></div>
   <div id="toast" class="toast hidden"></div>
   <div id="modalBackdrop" class="modal-backdrop hidden"></div>
+  <div id="publicInfoModal" class="modal hidden"><h2>公開画面の情報</h2><p>スマホ公開画面の「お知らせ」とアンケート導線に反映されます。</p><div class="public-info-grid"><div class="field"><label>運営からのお知らせ</label><textarea id="noticeEditor" style="min-height:150px"></textarea></div><div class="field"><label>アンケートURL</label><input id="surveyUrlEditor" placeholder="https://..." /></div></div><div class="modal-actions"><button id="publicInfoCloseBtn">閉じる</button><button id="applyPublicInfoBtn" class="primary">公開情報を反映</button></div></div>
   <div id="jsonModal" class="modal hidden"><h2>JSONデータ</h2><p>現在の会場・ブース・公開情報をまとめてバックアップできます。</p><textarea id="jsonTextarea"></textarea><div class="modal-actions"><button id="jsonCloseBtn">閉じる</button><button id="jsonImportBtn">読込</button><button id="jsonCopyBtn" class="primary">コピー</button></div></div>
 
   <script>
     'use strict';
-    const STORAGE_KEY = 'marcheMapPcEditorV5';
+    const STORAGE_KEY = 'marcheMapPcEditorV5'; // v5互換の保存領域を継続利用
     const ADMIN_PASSCODE = 'marche2026'; // デモ用。公開運用では外部認証に置換してください。
     const PX_PER_M = 42;
     const categoryDefs = {
@@ -205,7 +224,7 @@
       ]
     };
 
-    let state = deepClone(initialState);
+    let state = JSON.parse(JSON.stringify(initialState));
     let selectedId = null;
     let editorZoom = 1;
     let publicZoom = 1;
@@ -316,7 +335,7 @@
 
     function renderEditor(){
       $('editorCanvasInner').innerHTML=svgMarkup(true,editorZoom,'すべて');
-      $('editorZoomText').textContent=Math.round(editorZoom*100)+'%';$('venueStatus').textContent=`会場 ${state.venue.width}m × ${state.venue.height}m`;
+      $('editorZoomText').textContent=Math.round(editorZoom*100)+'%';$('venueStatus').textContent=`会場 ${state.venue.width}m × ${state.venue.height}m`;$('editorEventTitle').textContent=state.eventName;
       const so=selectedObject();$('selectionStatus').textContent=so?`選択：${so.name}`:'未選択';
       bindEditorSvgEvents();renderPropertyPanel();
     }
@@ -350,10 +369,11 @@
     }
     function syncEditorFields(){
       $('eventNameEditor').value=state.eventName;$('venueShape').value=state.venue.shape;$('venueWidth').value=state.venue.width;$('venueHeight').value=state.venue.height;$('gridSize').value=state.venue.grid;$('noticeEditor').value=state.notice;$('surveyUrlEditor').value=state.surveyUrl;
+      if($('venuePreset'))$('venuePreset').value=venuePresetValue(state.venue.width,state.venue.height);
     }
     function syncPropertyFields(){
       const o=selectedObject();if(!o)return;
-      $('propNumber').value=o.number;$('propType').value=o.type;$('propName').value=o.name;$('propCategory').value=o.category;$('propShape').value=o.shape;$('propWidth').value=o.w;$('propHeight').value=o.h;$('propX').value=o.x;$('propY').value=o.y;$('propDescription').value=o.description;$('propMenu').value=o.menu;$('propPrice').value=o.price;$('propPayment').value=o.payment;$('propLink').value=o.link;
+      $('propNumber').value=o.number;$('propType').value=o.type;$('propName').value=o.name;$('propCategory').value=o.category;$('propShape').value=o.shape;$('propWidth').value=o.w;$('propHeight').value=o.h;$('propX').value=o.x;$('propY').value=o.y;$('propDescription').value=o.description;$('propMenu').value=o.menu;$('propPrice').value=o.price;$('propPayment').value=o.payment;$('propLink').value=o.link;if($('propSizePreset'))$('propSizePreset').value=sizePresetValue(o.w,o.h);
     }
     function applyProperties(){
       const o=selectedObject();if(!o)return;
@@ -381,26 +401,34 @@
       const count=state.objects.filter(isShop).length+1;const obj=normalizeObject({id:uid(p.type),type:p.type,number:p.type==='booth'?String(count):'',name:p.label,category:p.category,shape:p.shape,w:p.w,h:p.h,x:Math.max(0,state.venue.width/2-p.w/2),y:Math.max(0,state.venue.height/2-p.h/2),color:p.color});state.objects.push(obj);selectedId=obj.id;moveEnabled=false;renderAll();showToast(`${p.label}を追加しました`);
     }
 
+    function venuePresetValue(w,h){const key=`${Number(w)}x${Number(h)}`;return ['12x20','18x30','24x40','30x50'].includes(key)?key:'custom'}
+    function sizePresetValue(w,h){const key=`${Number(w)}x${Number(h)}`;return ['2x2','3x2','4x2','3x3','6x3'].includes(key)?key:'custom'}
+    function applyVenuePreset(value){if(value==='custom')return;const [w,h]=value.split('x').map(Number);$('venueWidth').value=w;$('venueHeight').value=h}
+    function applySizePreset(value){if(value==='custom')return;const [w,h]=value.split('x').map(Number);$('propWidth').value=w;$('propHeight').value=h}
+
     function applyVenueSettings(){
       const oldW=state.venue.width,oldH=state.venue.height;const newW=clamp(Number($('venueWidth').value)||oldW,6,80),newH=clamp(Number($('venueHeight').value)||oldH,8,120);state.venue.shape=$('venueShape').value;state.venue.grid=Number($('gridSize').value);state.venue.width=newW;state.venue.height=newH;
       state.objects.forEach(o=>{o.x=clamp(o.x,0,Math.max(0,newW-o.w));o.y=clamp(o.y,0,Math.max(0,newH-o.h));if(!isInVenue(o.x+o.w/2,o.y+o.h/2)){o.x=Math.min(o.x,newW*.55);o.y=Math.min(o.y,newH*.55)}});renderAll();fitEditor();showToast('会場設定を反映しました');
     }
-    function applyPublicInfo(){state.eventName=$('eventNameEditor').value.trim()||'名称未設定';state.notice=$('noticeEditor').value;state.surveyUrl=$('surveyUrlEditor').value.trim();renderAll();showToast('公開情報を反映しました')}
+    function applyPublicInfo(){state.eventName=$('eventNameEditor').value.trim()||'名称未設定';state.notice=$('noticeEditor').value;state.surveyUrl=$('surveyUrlEditor').value.trim();closePublicInfo();renderAll();showToast('公開情報を反映しました')}
 
     function switchPublicPage(id){document.querySelectorAll('.public-page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('[data-public-page]').forEach(b=>b.classList.toggle('active',b.dataset.publicPage===id));if(id==='publicMap')setTimeout(()=>fitPublic(),20)}
     function switchLeftTab(id){document.querySelectorAll('[data-left-tab]').forEach(b=>b.classList.toggle('active',b.dataset.leftTab===id));document.querySelectorAll('.editor-side:not(.right) .side-panel').forEach(p=>p.classList.toggle('active',p.id===id))}
-    function syncMoveButton(){$('moveToolBtn').classList.toggle('active',moveEnabled);$('moveToolBtn').textContent=`配置移動 ${moveEnabled?'ON':'OFF'}`}
+    function syncMoveButton(){$('moveToolBtn').classList.toggle('move-active',moveEnabled);$('moveToolBtn').classList.toggle('active',moveEnabled);$('moveToolBtn').textContent=moveEnabled?'✥ 移動・サイズ変更':'🔒 配置ロック'}
     function setPublicZoom(z){publicZoom=clamp(z,.35,2.3);renderPublicMap()}
     function setEditorZoom(z){editorZoom=clamp(z,.35,2.3);renderEditor()}
     function fitPublic(){const vp=$('publicMapViewport');if(!vp.clientWidth)return;const z=Math.min((vp.clientWidth-36)/(state.venue.width*PX_PER_M),(vp.clientHeight-36)/(state.venue.height*PX_PER_M));setPublicZoom(clamp(z,.35,1.3));vp.scrollLeft=0;vp.scrollTop=0}
-    function fitEditor(){const vp=$('editorViewport');if(!vp.clientWidth)return;const z=Math.min((vp.clientWidth-116)/(state.venue.width*PX_PER_M),(vp.clientHeight-116)/(state.venue.height*PX_PER_M));setEditorZoom(clamp(z,.35,1.5));vp.scrollLeft=0;vp.scrollTop=0}
-    function centerSelected(){const o=selectedObject();if(!o)return;const vp=$('editorViewport');vp.scrollLeft=(o.x+o.w/2)*PX_PER_M*editorZoom-vp.clientWidth/2+58;vp.scrollTop=(o.y+o.h/2)*PX_PER_M*editorZoom-vp.clientHeight/2+58}
+    function fitEditor(){const vp=$('editorViewport');if(!vp.clientWidth)return;const z=Math.min((vp.clientWidth-88)/(state.venue.width*PX_PER_M),(vp.clientHeight-88)/(state.venue.height*PX_PER_M));setEditorZoom(clamp(z,.35,1.5));vp.scrollLeft=0;vp.scrollTop=0}
+    function centerSelected(){const o=selectedObject();if(!o)return;const vp=$('editorViewport');vp.scrollLeft=(o.x+o.w/2)*PX_PER_M*editorZoom-vp.clientWidth/2+44;vp.scrollTop=(o.y+o.h/2)*PX_PER_M*editorZoom-vp.clientHeight/2+44}
     function setupPan(viewport){let pan=null;viewport.addEventListener('pointerdown',e=>{if(e.button!==0)return;if(e.target.closest('[data-object-id], [data-resize-id]'))return;pan={x:e.clientX,y:e.clientY,left:viewport.scrollLeft,top:viewport.scrollTop};viewport.setPointerCapture?.(e.pointerId);viewport.classList.add('dragging')});viewport.addEventListener('pointermove',e=>{if(!pan)return;viewport.scrollLeft=pan.left-(e.clientX-pan.x);viewport.scrollTop=pan.top-(e.clientY-pan.y)});const stop=()=>{pan=null;viewport.classList.remove('dragging')};viewport.addEventListener('pointerup',stop);viewport.addEventListener('pointercancel',stop)}
 
     function saveLocal(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));showToast('このブラウザに保存しました')}
     function loadLocal(){const raw=localStorage.getItem(STORAGE_KEY);if(!raw){showToast('保存データがありません');return}try{state=normalizeState(JSON.parse(raw));selectedId=null;renderAll();fitEditor();showToast('保存データを読み込みました')}catch{showToast('読込に失敗しました')}}
+    function openPublicInfo(){syncEditorFields();$('modalBackdrop').classList.remove('hidden');$('publicInfoModal').classList.remove('hidden')}
+    function closePublicInfo(){$('publicInfoModal').classList.add('hidden');if($('jsonModal').classList.contains('hidden'))$('modalBackdrop').classList.add('hidden')}
     function openJson(){ $('jsonTextarea').value=JSON.stringify(state,null,2);$('modalBackdrop').classList.remove('hidden');$('jsonModal').classList.remove('hidden') }
-    function closeJson(){ $('modalBackdrop').classList.add('hidden');$('jsonModal').classList.add('hidden') }
+    function closeJson(){ $('jsonModal').classList.add('hidden');if($('publicInfoModal').classList.contains('hidden'))$('modalBackdrop').classList.add('hidden') }
+    function closeAllModals(){closeJson();closePublicInfo()}
     function importJson(){try{state=normalizeState(JSON.parse($('jsonTextarea').value));selectedId=null;closeJson();renderAll();fitEditor();showToast('JSONを読み込みました')}catch{showToast('JSON形式を確認してください')}}
 
     function openEditor(){sessionStorage.setItem('marcheAdmin','1');$('publicApp').classList.add('hidden');$('editorApp').classList.remove('hidden');renderEditor();syncEditorFields();setTimeout(fitEditor,30)}
@@ -414,15 +442,22 @@
       $('surveyBtn').addEventListener('click',()=>{if(state.surveyUrl)window.open(state.surveyUrl,'_blank','noopener');else showToast('アンケートURLは準備中です')});
       $('publicCategory').addEventListener('change',renderPublicMap);$('listCategory').addEventListener('change',renderShopList);$('listSort').addEventListener('change',renderShopList);
       $('pubZoomOut').addEventListener('click',()=>setPublicZoom(publicZoom-.15));$('pubZoomIn').addEventListener('click',()=>setPublicZoom(publicZoom+.15));$('pubFit').addEventListener('click',fitPublic);
-      document.querySelectorAll('[data-left-tab]').forEach(b=>b.addEventListener('click',()=>switchLeftTab(b.dataset.leftTab)));
-      $('applyVenueBtn').addEventListener('click',applyVenueSettings);$('applyPublicInfoBtn').addEventListener('click',applyPublicInfo);
+      $('venuePreset').addEventListener('change',e=>applyVenuePreset(e.target.value));$('propSizePreset').addEventListener('change',e=>applySizePreset(e.target.value));
+      $('applyVenueBtn').addEventListener('click',applyVenueSettings);$('publicInfoBtn').addEventListener('click',openPublicInfo);$('publicInfoCloseBtn').addEventListener('click',closePublicInfo);$('applyPublicInfoBtn').addEventListener('click',applyPublicInfo);
       $('moveToolBtn').addEventListener('click',()=>{if(!selectedObject()){showToast('先にオブジェクトを選択してください');return}moveEnabled=!moveEnabled;syncMoveButton();renderEditor()});
       $('snapToolBtn').addEventListener('click',()=>{snapEnabled=!snapEnabled;$('snapToolBtn').classList.toggle('active',snapEnabled);$('snapToolBtn').textContent=`吸着 ${snapEnabled?'ON':'OFF'}`});
       $('editorZoomOut').addEventListener('click',()=>setEditorZoom(editorZoom-.15));$('editorZoomIn').addEventListener('click',()=>setEditorZoom(editorZoom+.15));$('editorFit').addEventListener('click',fitEditor);$('editorCenterSelected').addEventListener('click',centerSelected);
       $('applyPropBtn').addEventListener('click',applyProperties);$('duplicatePropBtn').addEventListener('click',()=>{const o=selectedObject();if(!o)return;const d=deepClone(o);d.id=uid(o.type);d.name=o.name+' コピー';d.x=clamp(o.x+state.venue.grid,0,state.venue.width-o.w);d.y=clamp(o.y+state.venue.grid,0,state.venue.height-o.h);state.objects.push(d);selectedId=d.id;renderAll();showToast('複製しました')});
       $('deletePropBtn').addEventListener('click',()=>{const o=selectedObject();if(!o)return;if(!confirm(`「${o.name}」を削除しますか？`))return;state.objects=state.objects.filter(x=>x.id!==o.id);selectedId=null;moveEnabled=false;renderAll();showToast('削除しました')});
       $('saveLocalBtn').addEventListener('click',saveLocal);$('loadLocalBtn').addEventListener('click',loadLocal);$('jsonBtn').addEventListener('click',openJson);$('jsonCloseBtn').addEventListener('click',closeJson);$('jsonImportBtn').addEventListener('click',importJson);$('jsonCopyBtn').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('jsonTextarea').value);showToast('コピーしました')}catch{showToast('コピーできませんでした')}});
-      $('modalBackdrop').addEventListener('click',closeJson);$('sheetBackdrop').addEventListener('click',closeDetail);
+      $('modalBackdrop').addEventListener('click',closeAllModals);$('sheetBackdrop').addEventListener('click',closeDetail);
+      window.addEventListener('keydown',e=>{
+        if($('editorApp').classList.contains('hidden'))return;
+        const typing=['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName);
+        if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();saveLocal();return}
+        if(e.key==='Escape'){moveEnabled=false;syncMoveButton();renderEditor();closeAllModals();return}
+        if(!typing&&e.key==='Delete'&&selectedObject()){e.preventDefault();$('deletePropBtn').click()}
+      });
       setupPan($('publicMapViewport'));setupPan($('editorViewport'));
       window.addEventListener('resize',()=>{if(!$('editorApp').classList.contains('hidden'))fitEditor()});
     }
